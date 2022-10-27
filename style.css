@@ -3,3 +3,14 @@ body
     margin: 0;
     background-color: black;
 }
+
+p
+{
+    color: white;
+    font-size: 50px;
+    margin: 20px 130px;
+    font-weight: bold;
+    font-family: sans-serif;
+
+}
+

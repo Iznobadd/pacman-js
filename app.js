@@ -1,5 +1,6 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
+const score = document.querySelector('#score');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -86,6 +87,7 @@ const keys = {
 }
 
 let lastKey = '';
+let scores = 0;
 
 const map = [
     ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
@@ -396,6 +398,8 @@ function animate() {
 
         if(Math.hypot(pellet.position.x - player.position.x, pellet.position.y - player.position.y) < pellet.radius + player.radius){
             pellets.splice(i, 1);
+            scores += 1;
+            score.innerHTML = scores;
         }
     }
 
@@ -406,7 +410,6 @@ function animate() {
             player: player,
             walls: boundary
         })){
-                console.log(player.position.y - player.radius);
                 player.velocity.x = 0;
                 player.velocity.y = 0;
         }
