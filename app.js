@@ -72,11 +72,11 @@ const keys = {
 let lastKey = '';
 
 const map = [
-    ['-', '-', '-', '-', '-', '-'],
-    ['-', ' ', ' ', ' ', ' ', '-'],
-    ['-', ' ', '-', '-', ' ', '-'],
-    ['-', ' ', ' ', ' ', ' ', '-'],
-    ['-', '-', '-', '-', '-', '-'],
+    ['-', '-', '-', '-', '-', '-', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', '-', ' ', '-', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', '-', '-', '-', '-', '-', '-'],
 ];
 
 map.forEach((row, i) => {
@@ -94,26 +94,44 @@ map.forEach((row, i) => {
     });
 });
 
+function collideWithWalls({
+    player,
+    walls
+}) {
+    return (player.position.y - player.radius + player.velocity.y <= walls.position.y + walls.height &&
+        player.position.x + player.radius + player.velocity.x >= walls.position.x &&
+        player.position.y + player.radius + player.velocity.y >= walls.position.y && 
+        player.position.x - player.radius + player.velocity.x <= walls.position.x + walls.width);
+}
+
 function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
+
     boundaries.forEach((boundary) => {
         boundary.draw();
+        if(collideWithWalls({
+            player: player,
+            walls: boundary
+        })){
+                console.log(player.position.y - player.radius);
+                player.velocity.x = 0;
+                player.velocity.y = 0;
+        }
     });
     
     player.update();
 
-    player.velocity.x = 0;
-    player.velocity.y = 0;
+
 
     if(keys.z.pressed && lastKey === 'z'){
-        player.velocity.y = -1;
+        player.velocity.y = -10;
     } else if(keys.s.pressed && lastKey === 's'){
-        player.velocity.y = 1;
+        player.velocity.y = 10;
     } else if(keys.q.pressed && lastKey === 'q'){
-        player.velocity.x = -1;
+        player.velocity.x = -10;
     } else if(keys.d.pressed && lastKey === 'd'){
-        player.velocity.x = 1;
+        player.velocity.x = 10;
     }
 }
 
@@ -139,7 +157,6 @@ addEventListener('keydown', ({key}) => {
             lastKey = 'd';
         break;
     }
-    console.log(lastKey);
 })
 
 addEventListener('keyup', ({key}) => {
