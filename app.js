@@ -5,17 +5,17 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 class Boundary {
-    static width = 50;
-    static height = 50;
-    constructor({position}) {
+    static width = 40;
+    static height = 40;
+    constructor({position, image}) {
         this.position = position
-        this.width = 50
-        this.height = 50
+        this.width = 40
+        this.height = 40
+        this.image = image
     }
 
     draw() {
-        c.fillStyle = 'blue';
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        c.drawImage(this.image, this.position.x, this.position.y)
     }
 }
 
@@ -76,6 +76,8 @@ const map = [
     ['-', ' ', ' ', ' ', ' ', ' ', '-'],
     ['-', ' ', '-', ' ', '-', ' ', '-'],
     ['-', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', '-', ' ', '-', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', '-'],
     ['-', '-', '-', '-', '-', '-', '-'],
 ];
 
@@ -87,7 +89,8 @@ map.forEach((row, i) => {
                     position: {
                         x: Boundary.width * j,
                         y: Boundary.height * i
-                    }
+                    },
+                    image: image
                 }))
             break;
         }
@@ -125,13 +128,72 @@ function animate() {
 
 
     if(keys.z.pressed && lastKey === 'z'){
-        player.velocity.y = -10;
+        for(let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i];
+            if(collideWithWalls({
+                player: {...player, velocity: {
+                    x: 0,
+                    y: -5
+                }},
+                walls: boundary
+            })){
+                player.velocity.y = 0;
+                break
+            } else {
+                player.velocity.y = -5;
+            }
+        }
+    
     } else if(keys.s.pressed && lastKey === 's'){
-        player.velocity.y = 10;
+        for(let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i];
+            if(collideWithWalls({
+                player: {...player, velocity: {
+                    x: 0,
+                    y: 5
+                }},
+                walls: boundary
+            })){
+                player.velocity.y = 0;
+                break
+            } else {
+                player.velocity.y = 5;
+            }
+        }
+    
     } else if(keys.q.pressed && lastKey === 'q'){
-        player.velocity.x = -10;
+        for(let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i];
+            if(collideWithWalls({
+                player: {...player, velocity: {
+                    x: -5,
+                    y: 0
+                }},
+                walls: boundary
+            })){
+                player.velocity.x = 0;
+                break
+            } else {
+                player.velocity.x = -5;
+            }
+        }
+    
     } else if(keys.d.pressed && lastKey === 'd'){
-        player.velocity.x = 10;
+        for(let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i];
+            if(collideWithWalls({
+                player: {...player, velocity: {
+                    x: 5,
+                    y: 0
+                }},
+                walls: boundary
+            })){
+                player.velocity.x = 0;
+                break
+            } else {
+                player.velocity.x = 5;
+            }
+        }
     }
 }
 
